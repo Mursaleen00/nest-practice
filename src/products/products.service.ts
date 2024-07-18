@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateProductDto } from './dto/product-update.dto';
 import { CreateProductDto } from './dto/product-create.dto';
+import { ALLProductsDto } from './dto/all-products.dto';
 
 @Injectable()
 export class ProductsService {
@@ -19,7 +20,7 @@ export class ProductsService {
     },
     {
       id: 2,
-      title: 'Mobile',
+      title: 'Mobile Phone',
       description: 'This is a Devise',
       image: '/',
     },
@@ -35,13 +36,37 @@ export class ProductsService {
       description: 'This is a Devise',
       image: '/',
     },
+    {
+      id: 5,
+      title: 'Mobile',
+      description: 'This is a Mobile',
+      image: '/',
+    },
   ];
 
   // Find All Products
-  findAll() {
-    if (this.products.length == 0)
-      throw new NotFoundException('There Is No Product Yet');
-    return this.products;
+  findAll(query: ALLProductsDto) {
+    if (this.products.length == 0) return { products: [], total: 0 };
+
+    if (Object.keys(query).length > 0) {
+      // LIMIT & PAGE
+      if (query.limit && query.page) {
+        return {
+          products: this.products.slice(
+            (query.page - 1) * query.limit,
+            query.page * query.limit,
+          ),
+          total: this.products.length,
+        };
+      }
+
+      // Search
+      if (query.search) {
+        return (this.products = this.products.filter((p) =>
+          p.title.toLowerCase().includes(query.search.toLowerCase()),
+        ));
+      }
+    } else return { products: this.products, total: this.products.length };
   }
 
   // Find One Product

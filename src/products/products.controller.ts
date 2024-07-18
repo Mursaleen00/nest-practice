@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   ValidationPipe,
 } from '@nestjs/common';
 
@@ -15,22 +16,15 @@ import {
 import { CreateProductDto } from './dto/product-create.dto';
 import { UpdateProductDto } from './dto/product-update.dto';
 import { ProductsService } from './products.service';
+import { ALLProductsDto } from './dto/all-products.dto';
 
 @Controller('products')
 export class ProductsController {
-  /*
-        Get /product         Get All Products
-        Get /product/:id     Get Single Products
-        Post /product        Get Create a Products
-        Patch /product/:id   Get Update Products
-        Delete /product/:id  Get Remove Products
-  */
-
   constructor(private readonly productServices: ProductsService) {}
 
   @Get() // Get All Products
-  findAll() {
-    return this.productServices.findAll();
+  findAll(@Query() query: ALLProductsDto) {
+    return this.productServices.findAll(query);
   }
 
   @Get(':id') // Get Single Products
