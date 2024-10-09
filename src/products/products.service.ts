@@ -84,7 +84,10 @@ export class ProductsService {
   }
 
   // Update Product
-  update(id: number, product: UpdateProductDto) {
+  update(id: number, product: UpdateProductDto, user: any) {
+    if (user.email !== 'john@gmail.com') {
+      throw new NotFoundException('You are not allowed to update');
+    }
     this.products = this.products.map((p) => {
       if (p.id == id) return { ...p, ...product };
       return p;

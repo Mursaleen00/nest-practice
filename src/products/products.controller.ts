@@ -9,6 +9,8 @@ import {
   Patch,
   Post,
   Query,
+  Request,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 
@@ -17,6 +19,7 @@ import { CreateProductDto } from './dto/product-create.dto';
 import { UpdateProductDto } from './dto/product-update.dto';
 import { ProductsService } from './products.service';
 import { ALLProductsDto } from './dto/all-products.dto';
+import { AuthGuard } from 'src/auth/login/auth.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -37,12 +40,14 @@ export class ProductsController {
     return this.productServices.create(product);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id') // Get Update a Products
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body(ValidationPipe) product: UpdateProductDto,
+    @Request() req,
   ) {
-    return this.productServices.update(id, product);
+    return this.productServices.update(id, product, req.user);
   }
 
   @Delete(':id') // Get Delete a Products

@@ -12,26 +12,31 @@ export class UsersService {
       id: 1,
       name: 'john',
       email: 'john@gmail.com',
+      password: '123456',
     },
     {
       id: 2,
       name: 'jane',
       email: 'jane@gmail.com',
+      password: '123456',
     },
     {
       id: 3,
       name: 'jim',
       email: 'jim@gmail.com',
+      password: '123456',
     },
     {
       id: 4,
       name: 'jimmy',
       email: 'jimmy@gmail.com',
+      password: '123456',
     },
     {
       id: 5,
       name: 'joe',
       email: 'joe@gmail.com',
+      password: '123456',
     },
   ];
 
@@ -47,6 +52,10 @@ export class UsersService {
     if (!user) throw new NotFoundException('User Not Found');
 
     return user;
+  }
+
+  async LogIn(email: string): Promise<CreateUserDto | undefined> {
+    return this.users.find((user) => user.email === email);
   }
 
   // Create New User
